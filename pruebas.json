@@ -1,0 +1,243 @@
+{
+  "executedAt": "2026-10-27T15:43:34.173Z",
+  "runtime": "v24.22.1",
+  "passed": 47,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "x² en [0,2], trapecio n=4",
+      "status": "APROBADA",
+      "detail": "Resultado 2.750000000000; exacto 8/3; error 0.083333333333."
+    },
+    {
+      "name": "x² en [0,2], Simpson 1/3 n=4",
+      "status": "APROBADA",
+      "detail": "Resultado 2.666666666667; referencia 2.666666666667."
+    },
+    {
+      "name": "x² en [0,2], trapecio n=8",
+      "status": "APROBADA",
+      "detail": "Resultado 2.687500000000; exacto 8/3; error 0.020833333333."
+    },
+    {
+      "name": "x² en [0,2], Simpson 1/3 n=8",
+      "status": "APROBADA",
+      "detail": "Resultado 2.666666666667; referencia 2.666666666667."
+    },
+    {
+      "name": "x² en [0,2], Simpson 3/8 n=6",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "x² en [0,2], Simpson 3/8 n=12",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Exactitud cúbica S13, n=4",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Exactitud cúbica S38, n=6",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Exactitud cúbica M7, n=7",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Exactitud cúbica MIX, n=11",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Trapecio exacto para función lineal",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Ejercicio 19: distancia y conversión",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Ejercicio 20: trabajo combinado",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Ejercicio 21: perfil y dos formas de Simpson",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Ejercicio 22: función, n=8 y errores",
+      "status": "APROBADA",
+      "detail": "T=44.042044; S=43.899213; referencia=43.898841; E% de Simpson=0.000848."
+    },
+    {
+      "name": "Ejercicio 23: función, n=8 y errores",
+      "status": "APROBADA",
+      "detail": "T=11.681778; S=12.151244; referencia=12.828170; E% de Simpson=5.276870."
+    },
+    {
+      "name": "Ejercicio 24: función, n=8 y errores",
+      "status": "APROBADA",
+      "detail": "T=78.969264; S=80.010767; referencia=80.000000; E% de Simpson=0.013458."
+    },
+    {
+      "name": "Ejercicio 25: función, n=8 y errores",
+      "status": "APROBADA",
+      "detail": "T=3486620079.985219; S=3486236899.848311; referencia=3486236787.058988; E% de Simpson=0.000003."
+    },
+    {
+      "name": "Ejercicio 27: volumen y superficie simplificada",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "n=11, combinación 8+3 sobre datos SINTÉTICOS",
+      "status": "APROBADA",
+      "detail": "Función constante artificial para probar pesos; no representa anchuras del lago."
+    },
+    {
+      "name": "Coeficientes combinados: el nodo de unión suma ambos tramos",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Errores sin referencia no se inventan",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Referencia cero: error porcentual no definido",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de listas desiguales",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de x no creciente",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de x repetido",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de paso no uniforme",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de dato no numérico",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de dato infinito",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de pareja incompleta",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de texto en pareja",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de lista con valor vacío",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de n no entero",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de n cero",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de n negativo",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de n excesivo",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de límites invertidos",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de n impar para 1/3",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de n=4 para 3/8",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de n=8 para 3/8",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de combinación 4+3 con n distinto de 7",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de función fuera de dominio",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de expresión con acceso a código",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de símbolo de función desconocido",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Rechazo de paréntesis sin cerrar",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Parser: precedencia, potencia y radianes",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    },
+    {
+      "name": "Parser: gramática de las funciones de la guía",
+      "status": "APROBADA",
+      "detail": "Coincide con el valor esperado."
+    }
+  ]
+}

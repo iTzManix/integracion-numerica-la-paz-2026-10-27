@@ -1,0 +1,113 @@
+{
+  "executedAt": "2026-10-27T15:44:27.150Z",
+  "browser": "Microsoft Edge headless / Playwright",
+  "passed": 21,
+  "failed": 0,
+  "results": [
+    {
+      "name": "Carga inicial del ejercicio 19",
+      "pass": true,
+      "detail": "Simpson combinado: 0.147072 mi."
+    },
+    {
+      "name": "Prueba x² desde la interfaz",
+      "pass": true,
+      "detail": "Simpson 1/3; referencia 8/3."
+    },
+    {
+      "name": "Comparación n=4 y n=8 visible",
+      "pass": true,
+      "detail": "n\tMétodo\tResultado (u³)\tEₐ\tE%\n4\tTrapecio compuesto\t2.750000\t0.083333\t3.125000 %\n4\tSimpson 1/3\t2.666667\t0.000000\t0.000000 %\n8\tTrapecio compuesto\t2.687500\t0.020833\t0.781250 %\n8\tSimpson 1/3\t2.666667\t0.000000\t0.000000 %"
+    },
+    {
+      "name": "Rechazo de Simpson 3/8 con n=4",
+      "pass": true,
+      "detail": "Mensaje visible; resultado anterior oculto."
+    },
+    {
+      "name": "Simpson 3/8 con n=6",
+      "pass": true,
+      "detail": "Resultado exacto con seis subintervalos."
+    },
+    {
+      "name": "Función del caudal desde el selector",
+      "pass": true,
+      "detail": "S₈ = 12.151244 in³/s."
+    },
+    {
+      "name": "Listas desiguales desde interfaz",
+      "pass": true,
+      "detail": "Mensaje de error específico."
+    },
+    {
+      "name": "Ejercicio 26 no calcula datos ausentes",
+      "pass": true,
+      "detail": "No se inventan anchuras."
+    },
+    {
+      "name": "Combinación 8+3 desde interfaz",
+      "pass": true,
+      "detail": "Prueba con anchura constante SINTÉTICA de 1 mi; no es un resultado del lago."
+    },
+    {
+      "name": "Volumen del ejercicio 27 por 3/8",
+      "pass": true,
+      "detail": "Coincide con el recálculo independiente."
+    },
+    {
+      "name": "Tabla de coeficientes accesible",
+      "pass": true,
+      "detail": "13 nodos de z=0 a z=12."
+    },
+    {
+      "name": "Sin desbordamiento horizontal a 375 px",
+      "pass": true,
+      "detail": "La página se ajusta al ancho; las tablas tienen desplazamiento propio."
+    },
+    {
+      "name": "Sin desbordamiento horizontal a 768 px",
+      "pass": true,
+      "detail": "La página se ajusta al ancho; las tablas tienen desplazamiento propio."
+    },
+    {
+      "name": "Sin desbordamiento horizontal a 1024 px",
+      "pass": true,
+      "detail": "La página se ajusta al ancho; las tablas tienen desplazamiento propio."
+    },
+    {
+      "name": "Sin desbordamiento horizontal a 1440 px",
+      "pass": true,
+      "detail": "La página se ajusta al ancho; las tablas tienen desplazamiento propio."
+    },
+    {
+      "name": "Archivo enlazado resolucion-ejercicios.pdf",
+      "pass": true,
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "Archivo enlazado resolucion-ejercicios.md",
+      "pass": true,
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "Archivo enlazado informe-tecnico.pdf",
+      "pass": true,
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "Archivo enlazado evidencia-pruebas.md",
+      "pass": true,
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "Enlaces internos válidos",
+      "pass": true,
+      "detail": "Todos los destinos existen."
+    },
+    {
+      "name": "Sin errores de JavaScript en el navegador",
+      "pass": true,
+      "detail": "No se registraron excepciones."
+    }
+  ]
+}

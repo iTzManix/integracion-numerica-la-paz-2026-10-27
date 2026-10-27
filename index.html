@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Resolución paso a paso de los ejercicios 19 a 27 de integración numérica, con calculadora, pesos, errores y resultados.">
+<meta name="theme-color" content="#193c40"><title>Integración numérica | La Paz</title><link rel="stylesheet" href="styles.css"><script src="integration.js" defer></script><script src="app.js" defer></script></head>
+<body><a class="skip" href="#contenido">Saltar al contenido</a>
+<header class="masthead"><a class="brand" href="#inicio"><span class="brand-mark" aria-hidden="true">∫</span><span>Métodos numéricos<small>La Paz · Bolivia</small></span></a><nav aria-label="Navegación principal"><a href="#desarrollo">Desarrollo</a><a href="#laboratorio">Calculadora</a><a href="#resultados">Resultados</a><a class="download-nav" href="resolucion-ejercicios.pdf">Descargar PDF <span aria-hidden="true">↓</span></a></nav></header>
+<main id="contenido"><section class="hero" id="inicio"><div class="hero-copy"><div class="eyebrow">Cuaderno de resolución / Ejercicios 19–27</div><h1>De los datos<br>a la <em>integral.</em></h1><p>Resuelvo nueve problemas de integración numérica, muestro cada sustitución y compruebo los resultados paso a paso.</p><div class="hero-actions"><a class="button primary" href="#desarrollo">Ver el desarrollo <span aria-hidden="true">↘</span></a><a class="button secondary" href="#laboratorio">Probar la calculadora</a></div><p class="hero-note">Trapecio compuesto · Simpson 1/3 · Simpson 3/8</p></div>
+<div class="hero-visual"><svg viewBox="0 0 560 420" role="img" aria-label="Interpretación geométrica: una curva y trapecios aproximan el área bajo la función"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#c9d5ce" stroke-width=".6"/></pattern></defs><rect x="0" y="0" width="560" height="420" fill="url(#grid)"/><g stroke="#77978e" stroke-width="1.2" fill="#c7d7ba" fill-opacity=".65"><path d="M60 350V290L140 210V350Z"/><path d="M140 350V210L220 220V350Z"/><path d="M220 350V220L300 145V350Z"/><path d="M300 350V145L380 100V350Z"/><path d="M380 350V100L460 145V350Z"/></g><path d="M60 290 C95 240 110 205 140 210 S192 240 220 220 S268 164 300 145 S346 83 380 100 S422 102 460 145" fill="none" stroke="#193c40" stroke-width="4"/><path d="M40 350H510 M60 370V60" fill="none" stroke="#193c40" stroke-width="1.4"/><g fill="#193c40"><circle cx="60" cy="290" r="5"/><circle cx="140" cy="210" r="5"/><circle cx="220" cy="220" r="5"/><circle cx="300" cy="145" r="5"/><circle cx="380" cy="100" r="5"/><circle cx="460" cy="145" r="5"/></g><g fill="#193c40" font-family="Georgia,serif" font-size="19"><text x="66" y="45">f(x)</text><text x="518" y="355">x</text><text x="56" y="394">a</text><text x="455" y="394">b</text><text x="330" y="280" font-size="44">∫ f(x) dx</text></g></svg><div class="visual-caption"><span>01 / Aproximar el área</span><span>h = (b − a) / n</span></div></div></section>
+<div class="overview"><div><strong>09</strong><span>problemas desarrollados</span></div><div><strong>03</strong><span>métodos de integración</span></div><div><strong>04</strong><span>referencias analíticas</span></div><div><strong>02</strong><span>páginas de informe técnico</span></div></div>
+<div class="workspace" id="desarrollo"><aside class="sidebar"><div class="eyebrow">En este cuaderno</div><a href="#ejercicio-19"><span>19</span>Distancia de un vehículo</a><a href="#ejercicio-20"><span>20</span>Trabajo de una banda elástica</a><a href="#ejercicio-21"><span>21</span>Área bajo un perfil topográfico</a><a href="#ejercicio-22"><span>22</span>Longitud de una catenaria</a><a href="#ejercicio-23"><span>23</span>Caudal de una tubería circular</a><a href="#ejercicio-24"><span>24</span>Longitud de una cardioide</a><a href="#ejercicio-25"><span>25</span>Variación de energía potencial</a><a href="#ejercicio-26"><span>26</span>Superficie de un lago</a><a href="#ejercicio-27"><span>27</span>Volumen y superficie de un objeto alargado</a><a class="aside-link" href="#laboratorio">Calculadora numérica ↗</a><a class="aside-link" href="#resultados">Tabla final de resultados</a><div class="aside-downloads"><a href="resolucion-ejercicios.md" download>Resolución en Markdown ↓</a><a href="informe-tecnico.pdf">Informe técnico de 2 páginas ↓</a><a href="evidencia-pruebas.md">Evidencia de pruebas ↗</a></div></aside>
+<div class="reading"><section class="intro prose"><div class="eyebrow">Antes de empezar</div><h2>Resolución de integración numérica aplicada a La Paz</h2>
+<p>Desarrollo de los ejercicios 19 al 27</p>
+<p>Trabajo con los datos y las condiciones de <strong>Desafío grupal de Métodos Numéricos — Integración numérica aplicada a problemas de La Paz, Bolivia</strong>. Mi objetivo es plantear cada integral, mostrar cómo sustituyo los datos y comprobar el resultado con la aplicación. Los contextos paceños son adaptaciones didácticas: estas tablas no representan mediciones reales realizadas en Bolivia.</p>
+<p>La guía asigna dos ejercicios por grupo. Aquí desarrollo los nueve que aparecen en el documento, para dejar disponible la resolución completa. Mantengo el informe técnico resumido en un archivo aparte de dos páginas; este desarrollo extenso funciona como anexo de cálculo.</p>
+<h2>Criterio de cálculo</h2>
+<p>Primero compruebo que los nodos estén ordenados y separados por la misma distancia. Uso n para el número de subintervalos y n + 1 para el número de nodos. No cambio las tablas originales para forzar la aplicación de un método.</p>
+<pre><code>h = (b - a) / n
+T = h [f₀/2 + f₁ + ... + fₙ₋₁ + fₙ/2]
+S₁/₃ = (h/3) [f₀ + 4f₁ + 2f₂ + ... + 4fₙ₋₁ + fₙ], n par
+S₃/₈ = (3h/8) [f₀ + 3f₁ + 3f₂ + 2f₃ + ... + fₙ], n múltiplo de 3
+Eₐ = |I_ref - I_num|
+E% = 100 Eₐ / |I_ref|, si I_ref ≠ 0</code></pre>
+<p>Los pesos de las tablas se multiplican por h, h/3 o 3h/8 según el método. En las combinaciones aplico cada fórmula en su tramo y sumo las integrales; el nodo de unión pertenece a ambos tramos. Mantengo todos los decimales en el cálculo y redondeo la presentación a seis decimales. Para energías grandes muestro también notación científica. Las diferencias entre métodos no equivalen al error verdadero cuando falta una referencia independiente.</p></section><article id="ejercicio-19" class="exercise">
+      <div class="section-top"><span class="eyebrow">Ejercicio 19</span><button type="button" class="text-button" data-load="19">Abrir en la calculadora <span aria-hidden="true">↗</span></button></div>
+      <h2>Distancia de un vehículo</h2><h3>Planteamiento y datos</h3>
+<p>Quiero estimar la distancia recorrida durante los primeros 7 segundos. La velocidad está en mi/h, así que la integral respecto del tiempo en segundos debe dividirse entre 3600. Uso 1 mi = 1609.344 m.</p>
+<p><code>d = (1/3600) ∫₀⁷ v(t) dt</code>, con <code>h = 1 s</code> y <code>n = 7</code>.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">i</th><th scope="col">xᵢ</th><th scope="col">fᵢ</th><th scope="col">Peso T</th></tr></thead><tbody><tr><td>0</td><td>0.000000</td><td>0.000000</td><td>0.5</td></tr><tr><td>1</td><td>1.000000</td><td>14.000000</td><td>1</td></tr><tr><td>2</td><td>2.000000</td><td>39.000000</td><td>1</td></tr><tr><td>3</td><td>3.000000</td><td>69.000000</td><td>1</td></tr><tr><td>4</td><td>4.000000</td><td>95.000000</td><td>1</td></tr><tr><td>5</td><td>5.000000</td><td>114.000000</td><td>1</td></tr><tr><td>6</td><td>6.000000</td><td>129.000000</td><td>1</td></tr><tr><td>7</td><td>7.000000</td><td>139.000000</td><td>0.5</td></tr></tbody></table></div>
+<h3>Sustitución y resultado</h3>
+<p>Por trapecio obtengo:</p>
+<pre><code>T = 1[0/2 + 14 + 39 + 69 + 95 + 114 + 129 + 139/2]
+  = 529.500000 (mi/h)·s
+d_T = 529.5/3600 = 0.147083 mi = 236.707680 m</code></pre>
+<p>Como 7 no es par ni múltiplo de 3, combino Simpson 1/3 en [0,4] con Simpson 3/8 en [4,7].</p>
+<pre><code>S₁/₃[0,4] = (1/3)[0 + 4(14 + 69) + 2(39) + 95]
+           = 168.333333 (mi/h)·s
+S₃/₈[4,7] = (3/8)[95 + 3(114 + 129) + 139]
+           = 361.125000 (mi/h)·s
+S = 529.458333 (mi/h)·s
+d_S = S/3600 = 0.147072 mi = 236.689053 m</code></pre>
+<p>Los pesos locales son [1,4,2,4,1] con factor 1/3 y [1,3,3,1] con factor 3/8. La diferencia entre estimaciones es 0.000012 mi, equivalente a 0.018627 m. No calculo error verdadero porque no tengo la velocidad continua ni una distancia exacta. Mi estimación por Simpson combinado es aproximadamente 236.689053 m.</p></article><article id="ejercicio-20" class="exercise">
+      <div class="section-top"><span class="eyebrow">Ejercicio 20</span><button type="button" class="text-button" data-load="20">Abrir en la calculadora <span aria-hidden="true">↗</span></button></div>
+      <h2>Trabajo de una banda elástica</h2><h3>Planteamiento y datos</h3>
+<p>Para calcular el trabajo integro la fuerza respecto del desplazamiento. Interpreto lb como libra-fuerza, de acuerdo con el trabajo mecánico del ejercicio. Uso 1 lbf·in = 0.1129848290276167 J.</p>
+<p><code>W = ∫₀²·⁸ F(x) dx</code>, con <code>h = 0.4 in</code> y <code>n = 7</code>.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">i</th><th scope="col">xᵢ</th><th scope="col">fᵢ</th><th scope="col">Peso T</th></tr></thead><tbody><tr><td>0</td><td>0.000000</td><td>0.000000</td><td>0.5</td></tr><tr><td>1</td><td>0.400000</td><td>0.850000</td><td>1</td></tr><tr><td>2</td><td>0.800000</td><td>1.300000</td><td>1</td></tr><tr><td>3</td><td>1.200000</td><td>1.600000</td><td>1</td></tr><tr><td>4</td><td>1.600000</td><td>1.870000</td><td>1</td></tr><tr><td>5</td><td>2.000000</td><td>2.140000</td><td>1</td></tr><tr><td>6</td><td>2.400000</td><td>2.340000</td><td>1</td></tr><tr><td>7</td><td>2.800000</td><td>2.520000</td><td>0.5</td></tr></tbody></table></div>
+<h3>Sustitución y resultado</h3>
+<pre><code>T = 0.4[0/2 + 0.85 + 1.30 + 1.60 + 1.87 + 2.14 + 2.34 + 2.52/2]
+  = 4.544000 lbf·in
+S₁/₃[0,1.6] = (0.4/3)[0 + 4(0.85 + 1.60) + 2(1.30) + 1.87]
+             = 1.902666666667 lbf·in
+S₃/₈[1.6,2.8] = (3·0.4/8)[1.87 + 3(2.14 + 2.34) + 2.52]
+               = 2.674500000000 lbf·in
+W_S = 4.577166666667 lbf·in</code></pre>
+<p>Los pesos locales son [1,4,2,4,1] y [1,3,3,1], con factores 0.4/3 y 3·0.4/8. La combinación cubre los siete subintervalos sin eliminar datos.</p>
+<p>Convierto al SI: <code>W_T = 0.513403 J</code> y <code>W_S = 0.517150 J</code>. La diferencia es 0.033167 lbf·in. No la presento como error verdadero porque no conozco una referencia independiente. El trabajo es positivo y representa energía entregada a la banda durante el estiramiento.</p></article><article id="ejercicio-21" class="exercise">
+      <div class="section-top"><span class="eyebrow">Ejercicio 21</span><button type="button" class="text-button" data-load="21">Abrir en la calculadora <span aria-hidden="true">↗</span></button></div>
+      <h2>Área bajo un perfil topográfico</h2><h3>Planteamiento y procedencia</h3>
+<p>Uso la tabla ilustrativa de coordenadas que ya aparece en el documento. No afirmo haber digitalizado una gráfica que no está adjunta. Si trabajara desde la figura original, fijaría la escala de ambos ejes y registraría estas parejas antes de integrar. Como no se especifican unidades físicas, expreso el área en u².</p>
+<p><code>A = ∫₁¹⁰ y(x) dx</code>, con <code>h = 1 u</code> y <code>n = 9</code>.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">i</th><th scope="col">xᵢ</th><th scope="col">fᵢ</th><th scope="col">Peso T</th><th scope="col">Peso S 3/8</th></tr></thead><tbody><tr><td>0</td><td>1.000000</td><td>1.300000</td><td>0.5</td><td>1</td></tr><tr><td>1</td><td>2.000000</td><td>3.700000</td><td>1</td><td>3</td></tr><tr><td>2</td><td>3.000000</td><td>4.600000</td><td>1</td><td>3</td></tr><tr><td>3</td><td>4.000000</td><td>4.400000</td><td>1</td><td>2</td></tr><tr><td>4</td><td>5.000000</td><td>2.700000</td><td>1</td><td>3</td></tr><tr><td>5</td><td>6.000000</td><td>2.500000</td><td>1</td><td>3</td></tr><tr><td>6</td><td>7.000000</td><td>3.600000</td><td>1</td><td>2</td></tr><tr><td>7</td><td>8.000000</td><td>5.300000</td><td>1</td><td>3</td></tr><tr><td>8</td><td>9.000000</td><td>6.000000</td><td>1</td><td>3</td></tr><tr><td>9</td><td>10.000000</td><td>5.900000</td><td>0.5</td><td>1</td></tr></tbody></table></div>
+<h3>Sustitución y comparación</h3>
+<pre><code>T = 1[(1.3 + 5.9)/2 + 3.7 + 4.6 + 4.4 + 2.7 + 2.5 + 3.6 + 5.3 + 6.0]
+  = 36.400000 u²
+S₁/₃[1,9] = (1/3)[1.3 + 6.0 + 4(3.7 + 4.4 + 2.5 + 5.3)
+                    + 2(4.6 + 2.7 + 3.6)] = 30.900000 u²
+T[9,10] = (1/2)(6.0 + 5.9) = 5.950000 u²
+A_combinada = 30.900000 + 5.950000 = 36.850000 u²</code></pre>
+<p>Así reproduzco el resultado del solucionario. Además, 9 es múltiplo de 3 y puedo usar Simpson 3/8 en todo el intervalo:</p>
+<pre><code>S₃/₈ = (3/8)[1.3 + 5.9 + 3(3.7 + 4.6 + 2.7 + 2.5 + 5.3 + 6.0)
+                       + 2(4.4 + 3.6)] = 36.600000 u²</code></pre>
+<p>Obtengo tres estimaciones compatibles con una curva digitalizada. La diferencia 36.85 - 36.40 = 0.45 u² no mide el error verdadero. La incertidumbre de lectura de la gráfica y la interpolación entre nodos limita la precisión, aunque muestre seis decimales.</p></article><article id="ejercicio-22" class="exercise">
+      <div class="section-top"><span class="eyebrow">Ejercicio 22</span><button type="button" class="text-button" data-load="22">Abrir en la calculadora <span aria-hidden="true">↗</span></button></div>
+      <h2>Longitud de una catenaria</h2><h3>Modelo y referencia analítica</h3>
+<p>La curva es <code>y = 24 cosh(x/24)</code>, con x e y en ft. Derivo: <code>y′ = sinh(x/24)</code>. Al usar <code>cosh²(u) - sinh²(u) = 1</code>, la raíz de la fórmula de longitud se simplifica a cosh(x/24), que es positiva.</p>
+<pre><code>L = ∫₋₁₂²⁶ √(1 + sinh²(x/24)) dx = ∫₋₁₂²⁶ cosh(x/24) dx
+L_ref = 24[sinh(x/24)]₋₁₂²⁶ = 43.898840555674 ft</code></pre>
+<p>Tomo a = 24 ft como parámetro de la catenaria y como altura mínima del modelo, tal como lo define la guía. Los límites son -12 ft y 26 ft. La longitud es mayor que la separación horizontal de 38 ft, lo que tiene sentido geométrico. Este modelo simplificado no constituye un diseño del teleférico.</p>
+<h3>Desarrollo con ocho subintervalos</h3>
+<p>Uso <code>n = 8</code>, <code>h = 4.750000</code> y los siguientes nodos. Los valores de f que muestro están redondeados; para las sumas conservo su precisión completa.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">i</th><th scope="col">xᵢ</th><th scope="col">fᵢ</th><th scope="col">Peso T</th><th scope="col">Peso S 1/3</th></tr></thead><tbody><tr><td>0</td><td>-12.000000</td><td>1.127626</td><td>0.5</td><td>1</td></tr><tr><td>1</td><td>-7.250000</td><td>1.045975</td><td>1</td><td>4</td></tr><tr><td>2</td><td>-2.500000</td><td>1.005430</td><td>1</td><td>2</td></tr><tr><td>3</td><td>2.250000</td><td>1.004398</td><td>1</td><td>4</td></tr><tr><td>4</td><td>7.000000</td><td>1.042837</td><td>1</td><td>2</td></tr><tr><td>5</td><td>11.750000</td><td>1.122259</td><td>1</td><td>4</td></tr><tr><td>6</td><td>16.500000</td><td>1.245785</td><td>1</td><td>2</td></tr><tr><td>7</td><td>21.250000</td><td>1.418268</td><td>1</td><td>4</td></tr><tr><td>8</td><td>26.000000</td><td>1.646488</td><td>0.5</td><td>1</td></tr></tbody></table></div>
+<h3>Sustitución numérica</h3>
+<pre><code>Σ fᵢ interiores = 7.884952
+Σ fᵢ impares = 4.590900
+Σ fᵢ pares interiores = 3.294052
+T₈ = (4.75)[(1.127626 + 1.646488)/2 + 7.884952]
+   = 44.042044 ft
+S₈ = (4.75/3)[1.127626 + 1.646488 + 4(4.590900) + 2(3.294052)]
+   = 43.899213 ft</code></pre>
+<p>Comparo con <code>I_ref = 43.898841 ft</code>: el error absoluto del trapecio es 0.143203 ft (0.326212 %) y el de Simpson 1/3 es 0.000372 ft (0.000848 %).</p>
+<h3>Comparación de n igual a cuatro y ocho</h3>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">n</th><th scope="col">Método</th><th scope="col">Integral (ft)</th><th scope="col">Eₐ (ft)</th><th scope="col">E%</th></tr></thead><tbody><tr><td>4</td><td>Trapecio</td><td>44.470537</td><td>0.571696</td><td>1.302303</td></tr><tr><td>4</td><td>Simpson 1/3</td><td>43.904718</td><td>0.005877</td><td>0.013389</td></tr><tr><td>8</td><td>Trapecio</td><td>44.042044</td><td>0.143203</td><td>0.326212</td></tr><tr><td>8</td><td>Simpson 1/3</td><td>43.899213</td><td>0.000372</td><td>0.000848</td></tr></tbody></table></div>
+<p>En ambos métodos el error disminuye al duplicar n en este caso. Simpson 1/3 se acerca más a la referencia con el mismo número de subintervalos.</p>
+<h3>Comprobación adicional con Simpson tres octavos</h3>
+<p>No aplico Simpson 3/8 con n = 4 u 8, porque ninguno es múltiplo de 3. Para comprobarlo uso n = 6 y n = 12, con pesos [1,3,3,2,…,3,3,1] y factor 3h/8.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">n</th><th scope="col">h</th><th scope="col">S 3/8 (ft)</th><th scope="col">Eₐ (ft)</th><th scope="col">E%</th></tr></thead><tbody><tr><td>6</td><td>6.333333</td><td>43.901458</td><td>0.002618</td><td>0.005963</td></tr><tr><td>12</td><td>3.166667</td><td>43.899006</td><td>0.000166</td><td>0.000377</td></tr></tbody></table></div></article><article id="ejercicio-23" class="exercise">
+      <div class="section-top"><span class="eyebrow">Ejercicio 23</span><button type="button" class="text-button" data-load="23">Abrir en la calculadora <span aria-hidden="true">↗</span></button></div>
+      <h2>Caudal de una tubería circular</h2><h3>Modelo y referencia analítica</h3>
+<p>Integro anillos concéntricos: cada anillo tiene área diferencial <code>dA = 2πr dr</code>. El perfil <code>v(r) = 80(1-r/R)^(1/7)</code> está en in/s y <code>R = 0.25 in</code>. La función que debo integrar incluye el factor r; integrar solo la velocidad no daría el caudal.</p>
+<pre><code>Q = ∫₀⁰·²⁵ 160πr(1-r/0.25)^(1/7) dr
+u = r/R  →  Q = 160πR² ∫₀¹ u(1-u)^(1/7) du
+∫₀¹ u(1-u)^(1/7) du = 7/8 - 7/15 = 49/120
+Q_ref = 10π·49/120 = 49π/12 = 12.828170002158 in³/s</code></pre>
+<p>El integrando vale cero tanto en el centro como en la pared. Su derivada presenta una singularidad en la pared, de modo que el perfil converge lentamente y no corresponde aplicar sin más una cota de error que suponga derivadas acotadas en todo el intervalo.</p>
+<h3>Desarrollo con ocho subintervalos</h3>
+<p>Uso <code>n = 8</code>, <code>h = 0.031250</code> y los siguientes nodos. Los valores de f que muestro están redondeados; para las sumas conservo su precisión completa.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">i</th><th scope="col">xᵢ</th><th scope="col">fᵢ</th><th scope="col">Peso T</th><th scope="col">Peso S 1/3</th></tr></thead><tbody><tr><td>0</td><td>0.000000</td><td>0.000000</td><td>0.5</td><td>1</td></tr><tr><td>1</td><td>0.031250</td><td>15.411159</td><td>1</td><td>4</td></tr><tr><td>2</td><td>0.062500</td><td>30.150983</td><td>1</td><td>2</td></tr><tr><td>3</td><td>0.093750</td><td>44.063717</td><td>1</td><td>4</td></tr><tr><td>4</td><td>0.125000</td><td>56.908296</td><td>1</td><td>2</td></tr><tr><td>5</td><td>0.156250</td><td>68.271148</td><td>1</td><td>4</td></tr><tr><td>6</td><td>0.187500</td><td>77.314786</td><td>1</td><td>2</td></tr><tr><td>7</td><td>0.218750</td><td>81.696803</td><td>1</td><td>4</td></tr><tr><td>8</td><td>0.250000</td><td>0.000000</td><td>0.5</td><td>1</td></tr></tbody></table></div>
+<h3>Sustitución numérica</h3>
+<pre><code>Σ fᵢ interiores = 373.816893
+Σ fᵢ impares = 209.442828
+Σ fᵢ pares interiores = 164.374065
+T₈ = (0.03125)[(0.000000 + 0.000000)/2 + 373.816893]
+   = 11.681778 in³/s
+S₈ = (0.03125/3)[0.000000 + 0.000000 + 4(209.442828) + 2(164.374065)]
+   = 12.151244 in³/s</code></pre>
+<p>Comparo con <code>I_ref = 12.828170 in³/s</code>: el error absoluto del trapecio es 1.146392 in³/s (8.936521 %) y el de Simpson 1/3 es 0.676926 in³/s (5.276870 %).</p>
+<h3>Comparación de n igual a cuatro y ocho</h3>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">n</th><th scope="col">Método</th><th scope="col">Integral (in³/s)</th><th scope="col">Eₐ (in³/s)</th><th scope="col">E%</th></tr></thead><tbody><tr><td>4</td><td>Trapecio</td><td>10.273379</td><td>2.554791</td><td>19.915474</td></tr><tr><td>4</td><td>Simpson 1/3</td><td>11.326660</td><td>1.501510</td><td>11.704789</td></tr><tr><td>8</td><td>Trapecio</td><td>11.681778</td><td>1.146392</td><td>8.936521</td></tr><tr><td>8</td><td>Simpson 1/3</td><td>12.151244</td><td>0.676926</td><td>5.276870</td></tr></tbody></table></div>
+<p>En ambos métodos el error disminuye al duplicar n en este caso. Simpson 1/3 se acerca más a la referencia con el mismo número de subintervalos.</p>
+<h3>Comprobación adicional con Simpson tres octavos</h3>
+<p>No aplico Simpson 3/8 con n = 4 u 8, porque ninguno es múltiplo de 3. Para comprobarlo uso n = 6 y n = 12, con pesos [1,3,3,2,…,3,3,1] y factor 3h/8.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">n</th><th scope="col">h</th><th scope="col">S 3/8 (in³/s)</th><th scope="col">Eₐ (in³/s)</th><th scope="col">E%</th></tr></thead><tbody><tr><td>6</td><td>0.041667</td><td>11.744677</td><td>1.083493</td><td>8.446197</td></tr><tr><td>12</td><td>0.020833</td><td>12.339272</td><td>0.488898</td><td>3.811127</td></tr></tbody></table></div></article><article id="ejercicio-24" class="exercise">
+      <div class="section-top"><span class="eyebrow">Ejercicio 24</span><button type="button" class="text-button" data-load="24">Abrir en la calculadora <span aria-hidden="true">↗</span></button></div>
+      <h2>Longitud de una cardioide</h2><figure class="cardioid"><svg viewBox="0 0 600 440" role="img" aria-label="Cardioide con b igual a 5, cúspide en (5,0) y extremo izquierdo (-15,0)"><path class="axis" d="M80 220H520 M360 20V420"/><polyline class="curve" points="435.00,220.00 435.02,220.00 435.09,220.00 435.21,219.99 435.36,219.97 435.57,219.95 435.82,219.91 436.11,219.86 436.45,219.80 436.82,219.71 437.24,219.60 437.71,219.47 438.21,219.32 438.75,219.14 439.32,218.92 439.94,218.68 440.59,218.40 441.27,218.08 441.98,217.73 442.73,217.34 443.50,216.91 444.30,216.43 445.13,215.91 445.98,215.34 446.85,214.73 447.74,214.06 448.64,213.35 449.57,212.58 450.50,211.76 451.45,210.88 452.40,209.95 453.36,208.97 454.33,207.92 455.30,206.82 456.26,205.66 457.22,204.44 458.18,203.16 459.12,201.82 460.06,200.42 460.98,198.96 461.88,197.44 462.77,195.86 463.63,194.22 464.47,192.52 465.28,190.76 466.07,188.93 466.82,187.05 467.53,185.11 468.21,183.12 468.85,181.06 469.44,178.95 469.99,176.79 470.49,174.57 470.95,172.30 471.34,169.98 471.69,167.60 471.97,165.18 472.20,162.72 472.37,160.20 472.47,157.65 472.50,155.05 472.47,152.41 472.36,149.74 472.18,147.03 471.93,144.28 471.60,141.51 471.20,138.70 470.71,135.87 470.14,133.02 469.49,130.15 468.76,127.26 467.94,124.35 467.03,121.43 466.03,118.49 464.95,115.55 463.77,112.61 462.51,109.67 461.15,106.72 459.70,103.78 458.16,100.85 456.52,97.93 454.79,95.02 452.97,92.13 451.05,89.26 449.04,86.42 446.93,83.59 444.73,80.80 442.44,78.05 440.05,75.32 437.57,72.64 435.00,70.00 432.34,67.41 429.58,64.86 426.74,62.37 423.81,59.93 420.79,57.55 417.68,55.23 414.49,52.97 411.22,50.79 407.86,48.67 404.43,46.63 400.92,44.66 397.33,42.77 393.67,40.97 389.93,39.25 386.13,37.61 382.26,36.07 378.32,34.61 374.32,33.26 370.27,32.00 366.15,30.84 361.98,29.78 357.76,28.82 353.49,27.97 349.17,27.23 344.82,26.60 340.42,26.08 335.99,25.67 331.52,25.38 327.02,25.20 322.50,25.14 317.95,25.20 313.39,25.38 308.81,25.68 304.22,26.11 299.62,26.65 295.01,27.32 290.40,28.11 285.79,29.03 281.20,30.07 276.61,31.23 272.03,32.52 267.47,33.94 262.93,35.48 258.42,37.14 253.93,38.93 249.48,40.85 245.07,42.88 240.69,45.04 236.36,47.32 232.07,49.72 227.83,52.24 223.65,54.88 219.53,57.63 215.47,60.50 211.48,63.49 207.55,66.58 203.69,69.79 199.91,73.10 196.21,76.52 192.60,80.05 189.06,83.67 185.62,87.40 182.27,91.23 179.01,95.14 175.84,99.15 172.78,103.25 169.82,107.44 166.97,111.71 164.23,116.06 161.59,120.49 159.07,124.99 156.67,129.56 154.38,134.20 152.21,138.91 150.16,143.68 148.23,148.50 146.43,153.38 144.76,158.31 143.22,163.28 141.80,168.30 140.52,173.36 139.37,178.45 138.35,183.58 137.46,188.73 136.71,193.90 136.10,199.10 135.62,204.31 135.27,209.53 135.07,214.76 135.00,220.00 135.07,225.24 135.27,230.47 135.62,235.69 136.10,240.90 136.71,246.10 137.46,251.27 138.35,256.42 139.37,261.55 140.52,266.64 141.80,271.70 143.22,276.72 144.76,281.69 146.43,286.62 148.23,291.50 150.16,296.32 152.21,301.09 154.38,305.80 156.67,310.44 159.07,315.01 161.59,319.51 164.23,323.94 166.97,328.29 169.82,332.56 172.78,336.75 175.84,340.85 179.01,344.86 182.27,348.77 185.62,352.60 189.06,356.33 192.60,359.95 196.21,363.48 199.91,366.90 203.69,370.21 207.55,373.42 211.48,376.51 215.47,379.50 219.53,382.37 223.65,385.12 227.83,387.76 232.07,390.28 236.36,392.68 240.69,394.96 245.07,397.12 249.48,399.15 253.93,401.07 258.42,402.86 262.93,404.52 267.47,406.06 272.03,407.48 276.61,408.77 281.20,409.93 285.79,410.97 290.40,411.89 295.01,412.68 299.62,413.35 304.22,413.89 308.81,414.32 313.39,414.62 317.95,414.80 322.50,414.86 327.02,414.80 331.52,414.62 335.99,414.33 340.42,413.92 344.82,413.40 349.17,412.77 353.49,412.03 357.76,411.18 361.98,410.22 366.15,409.16 370.27,408.00 374.32,406.74 378.32,405.39 382.26,403.93 386.13,402.39 389.93,400.75 393.67,399.03 397.33,397.23 400.92,395.34 404.43,393.37 407.86,391.33 411.22,389.21 414.49,387.03 417.68,384.77 420.79,382.45 423.81,380.07 426.74,377.63 429.58,375.14 432.34,372.59 435.00,370.00 437.57,367.36 440.05,364.68 442.44,361.95 444.73,359.20 446.93,356.41 449.04,353.58 451.05,350.74 452.97,347.87 454.79,344.98 456.52,342.07 458.16,339.15 459.70,336.22 461.15,333.28 462.51,330.33 463.77,327.39 464.95,324.45 466.03,321.51 467.03,318.57 467.94,315.65 468.76,312.74 469.49,309.85 470.14,306.98 470.71,304.13 471.20,301.30 471.60,298.49 471.93,295.72 472.18,292.97 472.36,290.26 472.47,287.59 472.50,284.95 472.47,282.35 472.37,279.80 472.20,277.28 471.97,274.82 471.69,272.40 471.34,270.02 470.95,267.70 470.49,265.43 469.99,263.21 469.44,261.05 468.85,258.94 468.21,256.88 467.53,254.89 466.82,252.95 466.07,251.07 465.28,249.24 464.47,247.48 463.63,245.78 462.77,244.14 461.88,242.56 460.98,241.04 460.06,239.58 459.12,238.18 458.18,236.84 457.22,235.56 456.26,234.34 455.30,233.18 454.33,232.08 453.36,231.03 452.40,230.05 451.45,229.12 450.50,228.24 449.57,227.42 448.64,226.65 447.74,225.94 446.85,225.27 445.98,224.66 445.13,224.09 444.30,223.57 443.50,223.09 442.73,222.66 441.98,222.27 441.27,221.92 440.59,221.60 439.94,221.32 439.32,221.08 438.75,220.86 438.21,220.68 437.71,220.53 437.24,220.40 436.82,220.29 436.45,220.20 436.11,220.14 435.82,220.09 435.57,220.05 435.36,220.03 435.21,220.01 435.09,220.00 435.02,220.00 435.00,220.00"/><text x="448" y="243">(5, 0)</text><text x="82" y="243">(-15, 0)</text><text x="370" y="28">y</text><text x="525" y="212">x</text></svg><figcaption>Represento la cardioide con b = 5 y t de 0 a 2π. Las coordenadas se expresan en u.</figcaption></figure><h3>Modelo y referencia analítica</h3>
+<p>Con <code>b = 5</code>, la curva paramétrica es <code>x(t) = 10 cos(t) - 5 cos(2t)</code> y <code>y(t) = 10 sin(t) - 5 sin(2t)</code>. Tomo t en radianes. La guía no especifica una unidad de longitud, así que uso u.</p>
+<pre><code>x′(t) = -10 sin(t) + 10 sin(2t)
+y′(t) =  10 cos(t) - 10 cos(2t)
+(x′)² + (y′)² = 200(1-cos t) = 400 sin²(t/2)
+√((x′)²+(y′)²) = 20|sin(t/2)| = 20 sin(t/2), 0 ≤ t ≤ 2π
+L = ∫₀²π 20 sin(t/2) dt
+L_ref = [-40 cos(t/2)]₀²π = 80 u</code></pre>
+<p>La representación paramétrica tiene una cúspide en (5,0), alcanza (-15,0) para t = π y cierra al llegar a 2π. La página incluye su trazado y, en la calculadora, el gráfico del integrando de longitud.</p>
+<h3>Desarrollo con ocho subintervalos</h3>
+<p>Uso <code>n = 8</code>, <code>h = 0.785398</code> y los siguientes nodos. Los valores de f que muestro están redondeados; para las sumas conservo su precisión completa.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">i</th><th scope="col">xᵢ</th><th scope="col">fᵢ</th><th scope="col">Peso T</th><th scope="col">Peso S 1/3</th></tr></thead><tbody><tr><td>0</td><td>0.000000</td><td>0.000000</td><td>0.5</td><td>1</td></tr><tr><td>1</td><td>0.785398</td><td>7.653669</td><td>1</td><td>4</td></tr><tr><td>2</td><td>1.570796</td><td>14.142136</td><td>1</td><td>2</td></tr><tr><td>3</td><td>2.356194</td><td>18.477591</td><td>1</td><td>4</td></tr><tr><td>4</td><td>3.141593</td><td>20.000000</td><td>1</td><td>2</td></tr><tr><td>5</td><td>3.926991</td><td>18.477591</td><td>1</td><td>4</td></tr><tr><td>6</td><td>4.712389</td><td>14.142136</td><td>1</td><td>2</td></tr><tr><td>7</td><td>5.497787</td><td>7.653669</td><td>1</td><td>4</td></tr><tr><td>8</td><td>6.283185</td><td>0.000000</td><td>0.5</td><td>1</td></tr></tbody></table></div>
+<h3>Sustitución numérica</h3>
+<pre><code>Σ fᵢ interiores = 100.546790
+Σ fᵢ impares = 52.262519
+Σ fᵢ pares interiores = 48.284271
+T₈ = (0.785398163397)[(0.000000 + 0.000000)/2 + 100.546790]
+   = 78.969264 u
+S₈ = (0.785398163397/3)[0.000000 + 0.000000 + 4(52.262519) + 2(48.284271)]
+   = 80.010767 u</code></pre>
+<p>Comparo con <code>I_ref = 80.000000 u</code>: el error absoluto del trapecio es 1.030736 u (1.288420 %) y el de Simpson 1/3 es 0.010767 u (0.013458 %).</p>
+<h3>Comparación de n igual a cuatro y ocho</h3>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">n</th><th scope="col">Método</th><th scope="col">Integral (u)</th><th scope="col">Eₐ (u)</th><th scope="col">E%</th></tr></thead><tbody><tr><td>4</td><td>Trapecio</td><td>75.844756</td><td>4.155244</td><td>5.194055</td></tr><tr><td>4</td><td>Simpson 1/3</td><td>80.182390</td><td>0.182390</td><td>0.227988</td></tr><tr><td>8</td><td>Trapecio</td><td>78.969264</td><td>1.030736</td><td>1.288420</td></tr><tr><td>8</td><td>Simpson 1/3</td><td>80.010767</td><td>0.010767</td><td>0.013458</td></tr></tbody></table></div>
+<p>En ambos métodos el error disminuye al duplicar n en este caso. Simpson 1/3 se acerca más a la referencia con el mismo número de subintervalos.</p>
+<h3>Comprobación adicional con Simpson tres octavos</h3>
+<p>No aplico Simpson 3/8 con n = 4 u 8, porque ninguno es múltiplo de 3. Para comprobarlo uso n = 6 y n = 12, con pesos [1,3,3,2,…,3,3,1] y factor 3h/8.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">n</th><th scope="col">h</th><th scope="col">S 3/8 (u)</th><th scope="col">Eₐ (u)</th><th scope="col">E%</th></tr></thead><tbody><tr><td>6</td><td>1.047198</td><td>80.080394</td><td>0.080394</td><td>0.100492</td></tr><tr><td>12</td><td>0.523599</td><td>80.004775</td><td>0.004775</td><td>0.005969</td></tr></tbody></table></div></article><article id="ejercicio-25" class="exercise">
+      <div class="section-top"><span class="eyebrow">Ejercicio 25</span><button type="button" class="text-button" data-load="25">Abrir en la calculadora <span aria-hidden="true">↗</span></button></div>
+      <h2>Variación de energía potencial</h2><h3>Modelo y referencia analítica</h3>
+<p>Uso <code>m = 500 kg</code>, <code>g₀ = 9.81 m/s²</code>, <code>R = 6 371 000 m</code> y <code>h_final = 800 000 m</code>. Llamo Δy al paso numérico para no confundirlo con la altura final. Supongo el modelo gravitatorio radial indicado y calculo el aumento de energía potencial, sin añadir energía cinética orbital.</p>
+<pre><code>g(y) = g₀R²/(R+y)²
+ΔU = mg₀ ∫₀⁸⁰⁰⁰⁰⁰ R²/(R+y)² dy
+   = mg₀R²[-1/(R+y)]₀⁸⁰⁰⁰⁰⁰
+   = mg₀Rh_final/(R+h_final)
+ΔU_ref = 3 486 236 787.058988 J ≈ 3.486236787 × 10⁹ J</code></pre>
+<p>La energía es positiva porque elevo el satélite. Si mantuviera g constante obtendría 3 924 000 000 J, un valor mayor; aquí considero la disminución de g con la altura.</p>
+<h3>Desarrollo con ocho subintervalos</h3>
+<p>Uso <code>n = 8</code>, <code>h = 100000.000000</code> y los siguientes nodos. Los valores de f que muestro están redondeados; para las sumas conservo su precisión completa.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">i</th><th scope="col">xᵢ</th><th scope="col">fᵢ</th><th scope="col">Peso T</th><th scope="col">Peso S 1/3</th></tr></thead><tbody><tr><td>0</td><td>0.000000</td><td>4905.000000</td><td>0.5</td><td>1</td></tr><tr><td>1</td><td>100000.000000</td><td>4754.571932</td><td>1</td><td>4</td></tr><tr><td>2</td><td>200000.000000</td><td>4610.959286</td><td>1</td><td>2</td></tr><tr><td>3</td><td>300000.000000</td><td>4473.756481</td><td>1</td><td>4</td></tr><tr><td>4</td><td>400000.000000</td><td>4342.587664</td><td>1</td><td>2</td></tr><tr><td>5</td><td>500000.000000</td><td>4217.104129</td><td>1</td><td>4</td></tr><tr><td>6</td><td>600000.000000</td><td>4096.982005</td><td>1</td><td>2</td></tr><tr><td>7</td><td>700000.000000</td><td>3981.920155</td><td>1</td><td>4</td></tr><tr><td>8</td><td>800000.000000</td><td>3871.638295</td><td>0.5</td><td>1</td></tr></tbody></table></div>
+<h3>Sustitución numérica</h3>
+<pre><code>Σ fᵢ interiores = 30477.881652
+Σ fᵢ impares = 17427.352698
+Σ fᵢ pares interiores = 13050.528955
+T₈ = (100000)[(4905.000000 + 3871.638295)/2 + 30477.881652]
+   = 3486620079.985220 J
+S₈ = (100000/3)[4905.000000 + 3871.638295 + 4(17427.352698) + 2(13050.528955)]
+   = 3486236899.848311 J</code></pre>
+<p>Comparo con <code>I_ref = 3486236787.058988 J</code>: el error absoluto del trapecio es 383292.926232 J (0.010994 %) y el de Simpson 1/3 es 112.789323 J (0.000003 %).</p>
+<h3>Comparación de n igual a cuatro y ocho</h3>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">n</th><th scope="col">Método</th><th scope="col">Integral (J)</th><th scope="col">Eₐ (J)</th><th scope="col">E%</th></tr></thead><tbody><tr><td>4</td><td>Trapecio</td><td>3487769620.395947</td><td>1532833.336959</td><td>0.043968</td></tr><tr><td>4</td><td>Simpson 1/3</td><td>3486238585.723833</td><td>1798.664845</td><td>0.000052</td></tr><tr><td>8</td><td>Trapecio</td><td>3486620079.985220</td><td>383292.926232</td><td>0.010994</td></tr><tr><td>8</td><td>Simpson 1/3</td><td>3486236899.848311</td><td>112.789323</td><td>0.000003</td></tr></tbody></table></div>
+<p>En ambos métodos el error disminuye al duplicar n en este caso. Simpson 1/3 se acerca más a la referencia con el mismo número de subintervalos.</p>
+<h3>Comprobación adicional con Simpson tres octavos</h3>
+<p>No aplico Simpson 3/8 con n = 4 u 8, porque ninguno es múltiplo de 3. Para comprobarlo uso n = 6 y n = 12, con pesos [1,3,3,2,…,3,3,1] y factor 3h/8.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">n</th><th scope="col">h</th><th scope="col">S 3/8 (J)</th><th scope="col">Eₐ (J)</th><th scope="col">E%</th></tr></thead><tbody><tr><td>6</td><td>133333.333333</td><td>3486237586.858176</td><td>799.799189</td><td>0.000023</td></tr><tr><td>12</td><td>66666.666667</td><td>3486236837.193750</td><td>50.134762</td><td>0.000001</td></tr></tbody></table></div></article><article id="ejercicio-26" class="exercise">
+      <div class="section-top"><span class="eyebrow">Ejercicio 26</span><button type="button" class="text-button" data-load="26">Abrir en la calculadora <span aria-hidden="true">↗</span></button></div>
+      <h2>Superficie de un lago</h2><h3>Modelo y datos disponibles</h3>
+<p>El ejercicio se refiere al lago Erie y entrega el área de referencia <code>A_ref = 9940 mi²</code>. Planteo <code>A = ∫₄₀²⁶⁰ w(x) dx</code>, con x y el ancho w en millas. Me piden medir cada 20 mi, así que <code>h = 20 mi</code> y <code>n = (260-40)/20 = 11</code>.</p>
+<p>Los nodos serían x = 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240 y 260 mi. El archivo no incluye la figura del mapa ni una tabla de anchuras. Sin esas doce anchuras no puedo obtener un área numérica reproducible y no relleno los datos con valores supuestos.</p>
+<h3>Procedimiento listo para sustituir</h3>
+<p>Denomino w₀,…,w₁₁ a las anchuras que faltan. La expresión del trapecio queda:</p>
+<pre><code>A_T = 20[(w₀+w₁₁)/2 + w₁+w₂+w₃+w₄+w₅+w₆+w₇+w₈+w₉+w₁₀]</code></pre>
+<p>Para Simpson, 11 no es par ni múltiplo de 3. Uso ocho subintervalos con Simpson 1/3 y tres con Simpson 3/8:</p>
+<pre><code>A₁ = (20/3)[w₀+w₈ + 4(w₁+w₃+w₅+w₇) + 2(w₂+w₄+w₆)]
+A₂ = (3·20/8)[w₈+3w₉+3w₁₀+w₁₁]
+A_S = A₁+A₂
+Eₐ = |A_num-9940| mi²
+E% = 100|A_num-9940|/9940</code></pre>
+<p>El nodo w₈, en x = 200 mi, une ambos tramos. Hasta disponer de la tabla común dejo A_T, A_S y sus errores como <strong>no determinados por falta de datos</strong>. La aplicación permite introducir los doce anchos y usar esta combinación con n = 11.</p>
+<h3>Adaptación propuesta al Titicaca</h3>
+<p>Para adaptar el ejercicio usaría un contorno geográfico fechado y con procedencia verificable, por ejemplo de una autoridad cartográfica. Lo proyectaría a un sistema métrico adecuado y definiría secciones paralelas a intervalos iguales. Mediría en cada sección la suma de los segmentos de agua, descontando islas y separaciones. Registraría coordenadas, resolución, fecha, proyección y unidades; después integraría esos anchos y compararía con un área de referencia del mismo contorno y fecha. Esta es una propuesta de trabajo: no afirmo haber obtenido ni medido un mapa del Titicaca.</p></article><article id="ejercicio-27" class="exercise">
+      <div class="section-top"><span class="eyebrow">Ejercicio 27</span><button type="button" class="text-button" data-load="27">Abrir en la calculadora <span aria-hidden="true">↗</span></button></div>
+      <h2>Volumen y superficie de un objeto alargado</h2><h3>Datos y modelo de volumen</h3>
+<p>El diámetro no es el radio: primero calculo <code>r = d/2</code>. Integro las áreas circulares <code>πr²</code> a lo largo del eje z. Las coordenadas y los diámetros están en in; el volumen estará en in³.</p>
+<p><code>V = π∫₀¹² r(z)² dz</code>, con <code>h = 1 in</code> y <code>n = 12</code>.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">z (in)</th><th scope="col">d (in)</th><th scope="col">r (in)</th><th scope="col">r² (in²)</th><th scope="col">Peso T</th><th scope="col">Peso 1/3</th><th scope="col">Peso 3/8</th></tr></thead><tbody><tr><td>0</td><td>0.000000</td><td>0.000000</td><td>0.000000</td><td>0.5</td><td>1</td><td>1</td></tr><tr><td>1</td><td>2.600000</td><td>1.300000</td><td>1.690000</td><td>1</td><td>4</td><td>3</td></tr><tr><td>2</td><td>3.200000</td><td>1.600000</td><td>2.560000</td><td>1</td><td>2</td><td>3</td></tr><tr><td>3</td><td>4.800000</td><td>2.400000</td><td>5.760000</td><td>1</td><td>4</td><td>2</td></tr><tr><td>4</td><td>5.600000</td><td>2.800000</td><td>7.840000</td><td>1</td><td>2</td><td>3</td></tr><tr><td>5</td><td>6.000000</td><td>3.000000</td><td>9.000000</td><td>1</td><td>4</td><td>3</td></tr><tr><td>6</td><td>6.200000</td><td>3.100000</td><td>9.610000</td><td>1</td><td>2</td><td>2</td></tr><tr><td>7</td><td>6.000000</td><td>3.000000</td><td>9.000000</td><td>1</td><td>4</td><td>3</td></tr><tr><td>8</td><td>5.600000</td><td>2.800000</td><td>7.840000</td><td>1</td><td>2</td><td>3</td></tr><tr><td>9</td><td>4.800000</td><td>2.400000</td><td>5.760000</td><td>1</td><td>4</td><td>2</td></tr><tr><td>10</td><td>3.300000</td><td>1.650000</td><td>2.722500</td><td>1</td><td>2</td><td>3</td></tr><tr><td>11</td><td>2.600000</td><td>1.300000</td><td>1.690000</td><td>1</td><td>4</td><td>3</td></tr><tr><td>12</td><td>0.000000</td><td>0.000000</td><td>0.000000</td><td>0.5</td><td>1</td><td>1</td></tr></tbody></table></div>
+<h3>Sustitución para volumen</h3>
+<pre><code>Σ rᵢ² interiores = 63.472500
+Σ rᵢ² impares = 32.900000
+Σ rᵢ² pares interiores = 30.572500
+V_T = π·1[0/2 + 63.4725 + 0/2] = 199.404740 in³
+V_S = π(1/3)[0 + 0 + 4(32.9) + 2(30.5725)] = 201.842092 in³
+V_3/8 = 199.437137 in³</code></pre>
+<p>Simpson 1/3 produce un volumen 2.437352 in³ mayor que trapecio. No conozco el volumen exacto del objeto, así que no puedo atribuirle un error verdadero.</p>
+<h3>Fórmula simplificada de superficie</h3>
+<p>El enunciado propone <code>S_simplificada = 2π∫₀¹² r(z) dz</code>. La evalúo para reproducir la guía, pero esa expresión no incorpora la inclinación del perfil.</p>
+<pre><code>Σ rᵢ interiores = 25.350000
+Σ rᵢ impares = 13.400000
+Σ rᵢ pares interiores = 11.950000
+S_T = 2π·1[25.35] = 159.278748 in²
+S_S = 2π(1/3)[4(13.4)+2(11.95)] = 162.315620 in²
+S_3/8 = 160.574655 in²</code></pre>
+<h3>Diferencia con la superficie de revolución</h3>
+<p>Para la superficie geométrica necesito <code>S = 2π∫ r(z)√(1+[r′(z)]²) dz</code>. La tabla por sí sola no fija una derivada única: debo elegir cómo interpolo el perfil.</p>
+<p>Como estimación adicional explícita, conecto los radios por segmentos rectos. Cada tramo genera un tronco de cono y su área lateral es <code>π(rᵢ+rᵢ₊₁)√((Δz)²+(Δr)²)</code>. Con Δz = 1 in obtengo:</p>
+<p><code>S_lineal = Σ π(rᵢ+rᵢ₊₁)√(1+(rᵢ₊₁-rᵢ)²) = 175.596779 in²</code>.</p>
+<p>Este valor es exacto para el perfil lineal por tramos que acabo de definir, no para una superficie real desconocida. Es mayor que la fórmula simplificada porque incorpora la pendiente. No añado tapas: ambos radios extremos son cero.</p></article>
+<section id="laboratorio" class="lab"><div class="eyebrow">Comprobación de los procedimientos</div><h2>Mi calculadora numérica</h2><p>Elijo un ejercicio o ingreso mis datos. La tabla muestra los coeficientes que multiplican cada valor de la función.</p>
+<form id="calculator" novalidate><div class="field"><label for="preset">Cargar un ejercicio</label><select id="preset"><option value="">Datos propios</option></select><p id="preset-note" class="hint"></p></div>
+<div class="form-grid"><div class="field"><label for="mode">Tipo de entrada</label><select id="mode"><option value="pairs">Parejas x,y</option><option value="lists">Listas x e y separadas</option><option value="function">Función f(x)</option></select></div><div class="field"><label for="method">Método</label><select id="method"><option value="T">Trapecio compuesto</option><option value="S13">Simpson 1/3 · n par</option><option value="S38">Simpson 3/8 · n múltiplo de 3</option><option value="M7">Simpson combinado · 4 + 3</option><option value="M9">Simpson 1/3 + trapecio · 8 + 1</option><option value="MIX">Simpson 1/3 + 3/8 · n impar ≥ 5</option></select></div></div>
+<div id="pairs-fields" class="field"><label for="pairs">Datos · una pareja por línea</label><textarea id="pairs" rows="7" spellcheck="false" aria-describedby="pairs-help"></textarea><p id="pairs-help" class="hint">Formato: 0,0 en la primera línea; 1,1 en la siguiente. Usa punto decimal y coma, punto y coma o tabulación entre x e y. Máximo 2001 nodos.</p></div>
+<div id="lists-fields" hidden><div class="field"><label for="x-list">Lista x</label><textarea id="x-list" rows="2" spellcheck="false">0, 1, 2</textarea></div><div class="field"><label for="y-list">Lista y</label><textarea id="y-list" rows="2" spellcheck="false">0, 1, 4</textarea></div><p class="hint">Separa con comas o espacios. Ambas listas deben tener la misma longitud.</p></div>
+<div id="function-fields" hidden><div class="field"><label for="expression">Función f(x)</label><input id="expression" value="x^2" spellcheck="false" aria-describedby="function-help"><p id="function-help" class="hint">Variable x; constantes pi y e; + − * / ^; sin, cos, tan, sinh, cosh, sqrt, exp, log y abs. Usa radianes, paréntesis y * para multiplicar.</p></div><div class="form-grid three"><div class="field"><label for="a">Límite a</label><input id="a" type="number" step="any" value="0"></div><div class="field"><label for="b">Límite b</label><input id="b" type="number" step="any" value="2"></div><div class="field"><label for="n">Subintervalos n</label><input id="n" type="number" min="1" max="2000" step="1" value="8"></div></div></div>
+<div class="form-grid three"><div class="field"><label for="unit">Unidad del resultado</label><input id="unit" value="u²" maxlength="40"></div><div class="field"><label for="factor">Factor de conversión</label><input id="factor" type="number" step="any" value="1"></div><div class="field"><label for="reference">Referencia (opcional)</label><input id="reference" type="number" step="any" aria-describedby="reference-help"></div></div><p id="reference-help" class="hint">La referencia y la unidad corresponden al resultado después de aplicar el factor. Sin referencia, la diferencia entre métodos no es error verdadero.</p>
+<div class="form-actions"><button type="submit" class="button primary">Calcular integral <span aria-hidden="true">→</span></button><button id="test-square" type="button" class="button secondary">Probar x² en [0, 2]</button></div><p id="error" role="alert" aria-live="assertive"></p></form>
+<div id="output" hidden><div class="result-block" aria-live="polite"><span class="eyebrow">Resultado de la integral</span><strong id="result"></strong><p id="result-detail"></p><p id="error-result"></p></div><figure><div id="plot"></div><figcaption>Nodos y área por interpolación lineal. El gráfico ilustra los datos; el método seleccionado se aplica con los coeficientes de la tabla.</figcaption></figure><h3>Comparación de métodos compatibles</h3><div id="comparison"></div><div id="convergence" hidden><h3>Comparación con n = 4 y n = 8</h3><div id="convergence-table"></div><p class="hint">Simpson 3/8 requiere múltiplos de 3: no es válido para n = 4 ni n = 8.</p></div><h3>Tabla de pesos y productos</h3><p class="hint">Suma = Σ Cᵢfᵢ. Resultado = suma × factor de conversión. En los métodos combinados, el coeficiente del nodo compartido suma la contribución de ambos tramos.</p><details><summary>Mostrar todos los nodos y coeficientes</summary><div id="weights"></div></details></div></section>
+<section class="prose closure"><h2>Comprobación mínima del código</h2>
+<p>Uso <code>f(x) = x²</code> en [0,2], cuyo valor exacto es <code>8/3 = 2.666666666667</code>. Con n = 4, trapecio da 2.750000 y Simpson 1/3 da 2.666667; con n = 8, trapecio da 2.687500 y Simpson 1/3 da 2.666667. Simpson 3/8 da 2.666667 con n = 6 y con n = 12. No lo aplico con n = 4 ni n = 8.</p>
+<p>También compruebo el rechazo de listas desiguales, valores no numéricos, nodos desordenados, separación no uniforme y n incompatible. Las pruebas concretas y su estado se guardan en <code>evidencia-pruebas.md</code> y <code>pruebas.json</code>; no confundo una prueba pendiente con una aprobada.</p>
+<h2>Correspondencia con la rúbrica</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">Criterio</th><th scope="col">Puntos</th><th scope="col">Dónde lo desarrollo</th></tr></thead><tbody><tr><td>Interpretación y contexto</td><td>10</td><td>Contexto y objetivo de cada ejercicio; escenarios didácticos identificados.</td></tr><tr><td>Modelo, unidades y límites</td><td>10</td><td>Integral, variables, límites, conversiones y unidades en cada desarrollo.</td></tr><tr><td>Cálculo manual</td><td>20</td><td>Tablas, pesos, sustituciones y combinaciones por tramos.</td></tr><tr><td>Resultados y errores</td><td>15</td><td>Referencias analíticas en 22–25; errores verdaderos solo donde corresponden.</td></tr><tr><td>Aplicación web</td><td>25</td><td>Ingreso de tablas o función, validaciones, pesos, unidades, comparación y gráficos.</td></tr><tr><td>Informe y conclusiones</td><td>15</td><td>Informe técnico separado de dos páginas y limitaciones explícitas.</td></tr><tr><td>Repositorio y evidencias</td><td>5</td><td>Código, evidencias de pruebas, repositorio GitHub y enlace de la aplicación.</td></tr></tbody></table></div>
+<p>La rúbrica suma 100 puntos. Esta correspondencia describe la cobertura del trabajo; la calificación corresponde al docente. Los enlaces de la aplicación y del repositorio aparecen a continuación.</p>
+<h2>Conclusiones</h2>
+<p>Con las tablas de 19 y 20 combino Simpson para utilizar todos los datos. En el perfil del ejercicio 21 reproduzco la combinación de la guía y añado Simpson 3/8, que sí es válido para sus nueve subintervalos. En los ejercicios con referencia analítica compruebo que el refinamiento de n = 4 a n = 8 reduce el error; el perfil de caudal converge más despacio cerca de la pared.</p>
+<p>En el ejercicio 26 el resultado numérico queda pendiente de las anchuras originales. En el 27 distingo volumen, superficie simplificada y superficie de un perfil lineal por tramos. Mostrar más decimales no elimina la incertidumbre del modelo ni la de los datos digitalizados.</p>
+<h2>Fuente y alcance</h2>
+<p>Fuente de los enunciados, tablas, parámetros y referencias: <code>Desafio_Integracion_Numerica_La_Paz_Solucionario.docx</code>, secciones 1 a 10, archivo proporcionado para este trabajo. La guía no adjunta la gráfica original del perfil ni el mapa con anchuras del lago. Los resultados se recalcularon a partir de los datos suministrados. No uso supuestas mediciones locales ni fuentes geográficas no consultadas.</p>
+<h2>Aplicación y repositorio</h2>
+<p>Puedo repetir los cálculos en <a href="https://itzmanix.github.io/integracion-numerica-la-paz-2026-10-27/">la aplicación publicada</a> y consultar el código y las pruebas en <a href="https://github.com/iTzManix/integracion-numerica-la-paz-2026-10-27">el repositorio de GitHub</a>.</p></section>
+<section id="resultados" class="final-results"><div class="eyebrow">Cierre del cuaderno</div><h2>Tabla final de resultados</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de cálculo"><table><thead><tr><th scope="col">Ejercicio</th><th scope="col">Trapecio</th><th scope="col">Simpson 1/3 o combinado</th><th scope="col">Unidad</th><th scope="col">Referencia o limitación</th></tr></thead><tbody><tr><td>19</td><td>0.147083</td><td>0.147072</td><td>mi</td><td>Sin referencia exacta</td></tr><tr><td>20</td><td>4.544000</td><td>4.577167</td><td>lbf·in</td><td>Sin referencia exacta</td></tr><tr><td>21</td><td>36.400000</td><td>36.850000 (mixto)</td><td>u²</td><td>3/8: 36.600000; sin exacto</td></tr><tr><td>22</td><td>44.042044</td><td>43.899213</td><td>ft</td><td>Exacto: 43.898841</td></tr><tr><td>23</td><td>11.681778</td><td>12.151244</td><td>in³/s</td><td>Exacto: 12.828170</td></tr><tr><td>24</td><td>78.969264</td><td>80.010767</td><td>u</td><td>Exacto: 80.000000</td></tr><tr><td>25</td><td>3486620079.985220</td><td>3486236899.848311</td><td>J</td><td>Exacto: 3486236787.058988</td></tr><tr><td>26</td><td>No determinado</td><td>No determinado</td><td>mi²</td><td>Faltan 12 anchuras; ref. 9940</td></tr><tr><td>27</td><td>199.404740</td><td>201.842092</td><td>in³</td><td>Sin referencia exacta</td></tr></tbody></table></div>
+<p>En 21, Simpson 3/8 da 36.600000 u². En 27, la superficie simplificada da 159.278748 in² por trapecio y 162.315620 in² por Simpson 1/3; el perfil lineal por tramos da 175.596779 in².</p><div class="final-downloads"><a class="button primary" href="resolucion-ejercicios.pdf">Leer la resolución en PDF ↓</a><a class="button secondary" href="resolucion-ejercicios.md" download>Descargar Markdown ↓</a></div></section>
+</div></div></main><footer><span>Integración numérica aplicada a La Paz</span><span>Datos didácticos · Desarrollo reproducible · Sin dependencias externas</span></footer>
+<script id="preset-data" type="application/json">[
+  {
+    "id": 19,
+    "name": "19 · Distancia",
+    "x": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "y": [
+      0,
+      14,
+      39,
+      69,
+      95,
+      114,
+      129,
+      139
+    ],
+    "unit": "mi",
+    "factor": 0.0002777777777777778,
+    "method": "M7"
+  },
+  {
+    "id": 20,
+    "name": "20 · Trabajo",
+    "x": [
+      0.0,
+      0.4,
+      0.8,
+      1.2000000000000002,
+      1.6,
+      2.0,
+      2.4000000000000004,
+      2.8000000000000003
+    ],
+    "y": [
+      0,
+      0.85,
+      1.3,
+      1.6,
+      1.87,
+      2.14,
+      2.34,
+      2.52
+    ],
+    "unit": "lbf·in",
+    "factor": 1,
+    "method": "M7"
+  },
+  {
+    "id": 21,
+    "name": "21 · Perfil",
+    "x": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "y": [
+      1.3,
+      3.7,
+      4.6,
+      4.4,
+      2.7,
+      2.5,
+      3.6,
+      5.3,
+      6,
+      5.9
+    ],
+    "unit": "u²",
+    "factor": 1,
+    "method": "M9"
+  },
+  {
+    "id": 22,
+    "name": "22 · Longitud de una catenaria",
+    "expr": "cosh(x/24)",
+    "a": -12,
+    "b": 26,
+    "n": 8,
+    "unit": "ft",
+    "factor": 1,
+    "ref": 43.89884055567431,
+    "method": "S13"
+  },
+  {
+    "id": 23,
+    "name": "23 · Caudal de una tubería circular",
+    "expr": "160*pi*x*(1-x/0.25)^(1/7)",
+    "a": 0,
+    "b": 0.25,
+    "n": 8,
+    "unit": "in³/s",
+    "factor": 1,
+    "ref": 12.828170002158322,
+    "method": "S13"
+  },
+  {
+    "id": 24,
+    "name": "24 · Longitud de una cardioide",
+    "expr": "20*sin(x/2)",
+    "a": 0,
+    "b": 6.283185307179586,
+    "n": 8,
+    "unit": "u",
+    "factor": 1,
+    "ref": 80.0,
+    "method": "S13"
+  },
+  {
+    "id": 25,
+    "name": "25 · Variación de energía potencial",
+    "expr": "500*9.81*6371000^2/(6371000+x)^2",
+    "a": 0,
+    "b": 800000,
+    "n": 8,
+    "unit": "J",
+    "factor": 1,
+    "ref": 3486236787.0589876,
+    "method": "S13"
+  },
+  {
+    "id": 26,
+    "name": "26 · Lago (faltan anchuras)",
+    "x": [],
+    "y": [],
+    "unit": "mi²",
+    "factor": 1,
+    "ref": 9940,
+    "method": "MIX"
+  },
+  {
+    "id": 27,
+    "name": "27 · Volumen",
+    "x": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "y": [
+      0.0,
+      5.3092915845667505,
+      8.042477193189871,
+      18.09557368467721,
+      24.630086404143974,
+      28.274333882308138,
+      30.190705400997917,
+      28.274333882308138,
+      24.630086404143974,
+      18.09557368467721,
+      8.55298599939821,
+      5.3092915845667505,
+      0.0
+    ],
+    "unit": "in³",
+    "factor": 1,
+    "method": "S13"
+  },
+  {
+    "id": "27s",
+    "name": "27 · Superficie simplificada",
+    "x": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "y": [
+      0.0,
+      8.168140899333462,
+      10.053096491487338,
+      15.079644737231007,
+      17.59291886010284,
+      18.84955592153876,
+      19.477874452256717,
+      18.84955592153876,
+      17.59291886010284,
+      15.079644737231007,
+      10.367255756846317,
+      8.168140899333462,
+      0.0
+    ],
+    "unit": "in²",
+    "factor": 1,
+    "method": "S13"
+  }
+]</script></body></html>
