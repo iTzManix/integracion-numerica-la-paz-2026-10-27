@@ -2,6 +2,8 @@
 
 Resolución de los ejercicios 19 a 27 de la guía proporcionada, página estática y calculadora numérica reproducible.
 
+[Abrir la página publicada](https://itzmanix.github.io/integracion-numerica-la-paz-2026-10-27/) · [Ver el repositorio](https://github.com/iTzManix/integracion-numerica-la-paz-2026-10-27)
+
 ## Abrir la página
 
 Abrir `index.html` en un navegador. No necesita instalación, servidor ni conexión a internet. Las descargas, los gráficos y los cálculos usan archivos locales. También puede servirse esta carpeta con cualquier servidor HTTP estático.

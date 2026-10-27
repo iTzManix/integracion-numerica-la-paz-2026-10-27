@@ -1,6 +1,8 @@
 # Verificación de la página estática
 
-Fecha UTC: 2026-10-27T15:44:27.150Z. Navegador: Microsoft Edge headless / Playwright.
+Fecha UTC: 2026-10-27T15:47:36.890Z. Navegador: Microsoft Edge headless / Playwright.
+
+URL comprobada: https://itzmanix.github.io/integracion-numerica-la-paz-2026-10-27/
 
 | Comprobación | Estado | Evidencia |
 | --- | --- | --- |
